@@ -1,0 +1,17 @@
+blinker
+certifi
+charset-normalizer
+click
+colorama
+dnspython
+Flask
+idna
+itsdangerous
+Jinja2
+MarkupSafe
+PyJWT
+pymongo
+python-dotenv
+requests
+urllib3==1.25.11
+Werkzeug
