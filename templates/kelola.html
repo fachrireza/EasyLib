@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.4/css/bulma.min.css"
+        integrity="sha512-HqxHUkJM0SYcbvxUw5P60SzdOTy/QVwA1JJrvaXJv4q7lmbDZCmZaqz01UPOaQveoxfYRv1tHozWGPMcuTBuvQ=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" /> -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"
+        integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+"
+        crossorigin="anonymous"></script>
+
+    <script src="https://code.jquery.com/jquery-3.7.1.js"
+        integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
+
+    <title>Kelola</title>
+
+    <script>
+        $(document).ready(function () {
+            listing();
+            // bsCustomFileInput.init()
+        });
+
+        let articles;
+        function listing() {
+        $.ajax({
+            type: "GET",
+            url: "/tabel/buku",
+            data: {},
+            success: function (response) {
+                articles = response["articles"];
+                if (Array.isArray(articles) && articles.length > 0) {
+                    for (let i = 0; i < articles.length; i++) {
+                        let judul = articles[i]["judul"];
+                        let isbn = articles[i]["isbn"];
+                        let stock = articles[i]["stock"];
+                        let temp_html = `
+                            <tr>
+                                <td>${judul}</td>
+                                <td>${isbn}</td>
+                                <td>${stock}</td>
+                                <td>
+                                    <button onclick="setSelectedBook(${i})" type="button" class="btn btn-primary" data-bs-toggle="modal"
+                                        data-bs-target="#editbuku">
+                                        Edit</button>
+                                    <button onclick="delete_buku('${judul}')" type="button" class="btn btn-danger">Delete</button>
+                                </td>
+                            </tr>
+                        `;
+                        $("#tabel_buku").append(temp_html);
+                    }
+                } else {
+                    console.error("Error: 'articles' array is empty or not properly defined.", articles);
+                }
+            },
+        });
+    }
+
+        function save_buku() {
+            let tautan = $("#tautan").val();
+            let judul = $("#judul").val();
+            if (!judul) {
+                return alert("Hey user, you forgot a title");
+            }
+            let isbn = $("#isbn").val();
+            if (!isbn) {
+                return alert("Hey user, you forgot a description");
+            }
+            let posisi = $("#posisi").val();
+            if (!posisi) {
+                return alert("Hey user, you forgot a description");
+            }
+            let stock = $("#stock").val();
+            if (!stock) {
+                return alert("Hey user, you forgot a description");
+            }
+            let deskripsi = $("#deskripsi").val();
+            if (!deskripsi) {
+                return alert("Hey user, you forgot a description");
+            }
+
+            let cover = $("#cover").prop("files")[0];
+
+            let form_data = new FormData();
+
+            form_data.append("cover_give", cover);
+            form_data.append("tautan_give", tautan);
+            form_data.append("judul_give", judul);
+            form_data.append("isbn_give", isbn);
+            form_data.append("posisi_give", posisi);
+            form_data.append("stock_give", stock);
+            form_data.append("deskripsi_give", deskripsi);
+
+            $.ajax({
+                type: "POST",
+                url: "/save_buku",
+                data: form_data,
+                contentType: false,
+                processData: false,
+                success: function (response) {
+                    console.log(response);
+                    window.location.reload();
+                },
+            });
+        }
+        function delete_buku(judul) {
+            $.ajax({
+                type: "POST",
+                url: "/delete/buku",
+                data: { 'judul_give': judul },
+                success: function (response) {
+                    alert(response["msg"])
+                    window.location.reload()
+                }
+            });
+        }
+
+        function edit_buku() {
+            let judul = $("#judul_edit").val();
+            if (!judul) {
+                return alert("Hey user, you forgot a title");
+            }
+            let isbn = $("#isbn_edit").val();
+            if (!isbn) {
+                return alert("Hey user, you forgot a description");
+            }
+            let posisi = $("#posisi_edit").val();
+            if (!posisi) {
+                return alert("Hey user, you forgot a description");
+            }
+            let stock = $("#stock_edit").val();
+            if (!stock) {
+                return alert("Hey user, you forgot a description");
+            }
+            let deskripsi = $("#exampleFormControlTextarea1").val();
+            if (!deskripsi) {
+                return alert("Hey user, you forgot a description");
+            }
+
+            let cover = $("#cover_edit").prop("files")[0];
+
+            let form_data = new FormData();
+
+            form_data.append("cover_give", cover);
+            form_data.append("tautan_give", tautan);
+            form_data.append("judul_give", judul);
+            form_data.append("isbn_give", isbn);
+            form_data.append("posisi_give", posisi);
+            form_data.append("stock_give", stock);
+            form_data.append("deskripsi_give", deskripsi);
+
+            $.ajax({
+                type: "POST",
+                url: "/edit_buku",
+                data: form_data,
+                contentType: false,
+                processData: false,
+                success: function (response) {
+                    console.log(response);
+                    window.location.reload();
+                },
+            });
+        }
+        function setSelectedBook(index) {
+            if (Array.isArray(articles) && articles.length > index) {
+                let selected_book = articles[index];
+
+                // Set values in the edit book modal
+                $("#judul_edit").val(selected_book["judul"]);
+                $("#isbn_edit").val(selected_book["isbn"]);
+                $("#posisi_edit").val(selected_book["posisi"]);
+                $("#stock_edit").val(selected_book["stock"]);
+                $("#exampleFormControlTextarea1").val(selected_book["deskripsi"]);
+
+                // You may need to update the cover input field if needed
+                $('#editbuku').modal('show');
+            } else {
+                console.error("Error: 'articles' array is not properly defined or index is out of bounds.", articles);
+            }
+        }
+    </script>
+
+</head>
+
+<body>
+
+    <section>
+        <div>
+            <div class="d-flex justify-content-between p-3 bg-primary">
+                <div>
+                    <h1 style="font-size: 40px;">EasyLib</h1>
+                </div>
+                <div>
+                    <a href="/user/{{ user_info.nik }}">
+                        <img id="profile-foto" style="height: 50px;width: 50px;border-radius: 50%;"
+                            src="{{ url_for('static', filename=user_info.profile_pic) }}">
+                    </a>
+
+                </div>
+            </div>
+        </div>
+        <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+            <div class="container-fluid">
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                        <li class="nav-item">
+                            <a class="nav-link active navbar-brand" aria-current="page" href="/">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active navbar-brand" aria-current="page" href="/dashboard">Dashboard</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link navbar-brand" href="/kelola">Kelola</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link navbar-brand" href="/peminjaman">Peminjaman</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link navbar-brand" href="/pengembalian">Pengembalian</a>
+                        </li>
+
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        </div>
+    </section>
+    <div class="container">
+        <div class="row">
+            <div class="col pt-4">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h2>Kelola Buku</h2>
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#tambahbuku">
+                        Tambah</button>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" id="tambahbuku" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Tambah Buku</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="formFile" class="form-label">Masukkan Gambar</label>
+                            <input class="form-control" type="file" id="cover">
+                        </div>
+                        <div class="mb-3">
+                            <input class="form-control" type="text" placeholder="Judul" aria-label="Judul" id="judul">
+                        </div>
+                        <div class="mb-3">
+                            <input class="form-control" type="text" placeholder="ISBN" aria-label="ISBN" id="isbn">
+                        </div>
+                        <div class="mb-3">
+                            <input class="form-control" type="text" placeholder="Tautan Buku" aria-label="Tautan"
+                                id="tautan">
+                        </div>
+                        <div class="mb-3">
+                            <input class="form-control" type="text" placeholder="Posisi" aria-label="Posisi"
+                                id="posisi">
+                        </div>
+                        <div class="mb-3">
+                            <input class="form-control" type="number" placeholder="Stock" aria-label="Stock" id="stock">
+                        </div>
+                        <div class="mb-3">
+                            <label for="exampleFormControlTextarea1" class="form-label">Deskripsi</label>
+                            <textarea class="form-control" id="deskripsi" rows="3"></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary" onclick="save_buku()">Save changes</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mt-4">
+            <div class="col">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th scope="col">Judul Buku</th>
+                            <th scope="col">ISBN</th>
+                            <th scope="col">Stok</th>
+                            <th scope="col">Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabel_buku">
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="editbuku" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Edit Buku</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="formFile" class="form-label">Masukkan Gambar</label>
+                        <input class="form-control" type="file" id="cover_edit">
+                    </div>
+                    <div class="mb-3">
+                        <input id="judul_edit" class="form-control" type="text" placeholder="Judul" aria-label="Judul">
+                    </div>
+                    <div class="mb-3">
+                        <input id="isbn_edit" class="form-control" type="text" placeholder="ISBN" aria-label="ISBN">
+                    </div>
+                    <div class="mb-3">
+                        <input id="posisi_edit" class="form-control" type="text" placeholder="Posisi"
+                            aria-label="Posisi">
+                    </div>
+                    <div class="mb-3">
+                        <input id="stock_edit" class="form-control" type="text" placeholder="Stock" aria-label="Stock">
+                    </div>
+                    <div class="mb-3">
+                        <label id="deskripsi_edit" for="exampleFormControlTextarea1"
+                            class="form-label">Deskripsi</label>
+                        <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button onclick="edit_buku()" type="button" class="btn btn-primary">Save changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- <div class="modal fade" id="hapusbuku" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Hapus Buku</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Anda yakin ingin menghapus buku?</p>
+                    <div class="d-flex justify-content-center">
+                        <button type="button" class="btn btn-primary">Yes</button>
+                        <button type="button" class="btn btn-danger">No</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div> -->
+
+</body>
+
+</html>

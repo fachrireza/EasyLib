@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.rtl.min.css"
+        integrity="sha384-nU14brUcp6StFntEOOEBvcJm4huWjB0OcIeQ3fltAfSmuZFrkAif0T+UtNGlKKQv" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.4/css/bulma.min.css"
+        integrity="sha512-HqxHUkJM0SYcbvxUw5P60SzdOTy/QVwA1JJrvaXJv4q7lmbDZCmZaqz01UPOaQveoxfYRv1tHozWGPMcuTBuvQ=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script src="https://code.jquery.com/jquery-3.7.1.js"
+        integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
+    <title>Home Mahasiswa</title>
+
+    <script>
+
+    </script>
+
+</head>
+
+<body>
+    <nav style="height: 70px;" class="navbar">
+        <div class="container">
+            <div id="navMenu" class="navbar-menu">
+                <div class="navbar-start">
+                    <a href="#home" class="navbar-item">
+                        Home
+                    </a>
+                </div>
+
+                <div class="navbar-end">
+                    <div class="navbar-item">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <section style="background-image:url(https://blog.unmaha.ac.id/hubfs/books-1617327_1280.jpg) ;"
+        class="hero is-link is-fullheight-with-navbar">
+        <div class="hero-body">
+            <div class="container has-text-centered p-2" style="background-color: antiquewhite;">
+                <p class="title" style="color: black; font-weight: bolder; font-size: 70px;">
+                    EasyLib
+                </p>
+                <p class="subtitle" style="color: black; font-weight: bolder; font-size: 25px;">
+                    Membaca kini mudah di EasyLib
+                </p>
+                <p class="subtitle" style="color: black; font-size: 18px;">
+                    Perpustakan online Universitas Muhammadiyah Riau
+                </p>
+                <a href="/dashboardmhs" class="button is-success is-light">Katalog</a>
+            </div>
+
+        </div>
+    </section>
+    <div id="home" class="jumbotron jumbotron-fluid my-6">
+        <div class="container">
+            <div class="row">
+                <div class="col">
+                    <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
+                        <div class="carousel-indicators">
+                            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0"
+                                class="active" aria-current="true" aria-label="Slide 1"></button>
+                            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1"
+                                aria-label="Slide 2"></button>
+                            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2"
+                                aria-label="Slide 3"></button>
+                        </div>
+                        <div class="carousel-inner">
+                            <div class="carousel-item active">
+                                <img src="https://perpus.umri.ac.id/ckfinder/userfiles/images/blog/umri-pustaka3.jpg"
+                                    class="d-block w-100" alt="...">
+                            </div>
+                            <div class="carousel-item">
+                                <img src="https://perpus.umri.ac.id/ckfinder/userfiles/images/blog/umri-pustaka1.jpg"
+                                    class="d-block w-100" alt="...">
+                            </div>
+                            <div class="carousel-item">
+                                <img src="https://feb.umri.ac.id/wp-content/uploads/2019/08/Meja-Perpustakaan.jpg"
+                                    class="d-block w-100" alt="...">
+                            </div>
+                        </div>
+                        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators"
+                            data-bs-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Previous</span>
+                        </button>
+                        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators"
+                            data-bs-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Next</span>
+                        </button>
+                    </div>
+                </div>
+                <div class="col">
+                    <h1 class="display-4">EasyLib</h1>
+                    <p class="lead">Selamat datang di EasyLib, yang merupakan website perpustakaan dari Universitas
+                        Muhammadiyah Riau.</p>
+                    <p class="lead">Perpustakaan sesungguhnya menyimpan energi yang dapat melahirkan ide, gagasan dan
+                        imajinasi. Mari kunjungi pustaka kita, Universitas Muhammadiyah Riau..</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <footer class="py-3 my-4">
+        <ul class="nav justify-content-center border-bottom pb-3 mb-3">
+            <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">Home</a></li>
+            <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">Features</a></li>
+            <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">Pricing</a></li>
+            <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">FAQs</a></li>
+            <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">About</a></li>
+        </ul>
+        <p class="text-center text-muted">© 2022 Company, Inc</p>
+    </footer>
+</body>
+
+</html>

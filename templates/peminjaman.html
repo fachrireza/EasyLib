@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.4/css/bulma.min.css"
+        integrity="sha512-HqxHUkJM0SYcbvxUw5P60SzdOTy/QVwA1JJrvaXJv4q7lmbDZCmZaqz01UPOaQveoxfYRv1tHozWGPMcuTBuvQ=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" /> -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"
+        integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+"
+        crossorigin="anonymous"></script>
+
+    <!--  jQuery -->
+    <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+
+    <!-- Isolated Version of Bootstrap, not needed if your site already uses Bootstrap -->
+    <link rel="stylesheet" href="https://formden.com/static/cdn/bootstrap-iso.css" />
+
+    <!-- Bootstrap Date-Picker Plugin -->
+    <script type="text/javascript"
+        src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/js/bootstrap-datepicker.min.js"></script>
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/css/bootstrap-datepicker3.css" />
+    <title>Peminjaman</title>
+
+    <script>
+        $(document).ready(function () {
+            var date_input = $('input[name="date"]'); //our date input has the name "date"
+            var container = $('.bootstrap-iso form').length > 0 ? $('.bootstrap-iso form').parent() : "body";
+            var options = {
+                format: 'mm/dd/yyyy',
+                container: container,
+                todayHighlight: true,
+                autoclose: true,
+            };
+            date_input.datepicker(options);
+        })
+
+        function savePeminjaman() {
+            var mahasiswa = $('#mahasiswa').val();
+            var buku = $('#buku').val();
+            var date = $('#date').val();
+
+            $.ajax({
+                type: "POST",
+                url: "/save_peminjaman",
+                data: {
+                    mahasiswa: mahasiswa,
+                    buku: buku,
+                    date: date
+                },
+                success: function (response) {
+                    // Handle the success response here
+                    console.log('Peminjaman saved successfully');
+
+                    // Tutup modal peminjaman setelah berhasil
+                    $('#peminjaman').modal('hide');
+
+                    // Tambahkan notifikasi atau tindakan lainnya jika diperlukan
+                },
+                error: function (error) {
+                    console.error(error); // Log any errors
+                    // Handle errors or add error handling logic here
+                }
+            });
+        }
+        function terimaPermintaan(nim, judul, tanggal_pinjam) {
+            $.ajax({
+                type: "POST",
+                url: "/terima_permintaan",
+                data: {
+                    nim: nim,
+                    judul: judul,
+                    tanggal_pinjam: tanggal_pinjam
+                },
+                success: function (response) {
+                    // Handle success response here
+                    console.log('Permintaan diterima');
+                    // Refresh halaman atau lakukan tindakan lainnya jika diperlukan
+                    location.reload();
+                },
+                error: function (error) {
+                    console.error(error); // Log any errors
+                    // Handle errors or add error handling logic here
+                }
+            });
+        }
+    </script>
+
+</head>
+
+<body>
+    <section>
+        <div>
+            <div class="d-flex justify-content-between p-3 bg-primary">
+                <div>
+                    <h1 style="font-size: 40px;">EasyLib</h1>
+                </div>
+                <div>
+                    <a href="/user/{{ user_info.nik }}">
+                        <img id="profile-foto" style="height: 50px;width: 50px;border-radius: 50%;"
+                            src="{{ url_for('static', filename=user_info.profile_pic_real) }}">
+                    </a>
+
+                </div>
+            </div>
+        </div>
+        <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+            <div class="container-fluid">
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                        <li class="nav-item">
+                            <a class="nav-link active navbar-brand" aria-current="page" href="/">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active navbar-brand" aria-current="page" href="/dashboard">Dashboard</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link navbar-brand" href="/kelola">Kelola</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link navbar-brand" href="/peminjaman">Peminjaman</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link navbar-brand" href="/pengembalian">Pengembalian</a>
+                        </li>
+
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        </div>
+    </section>
+
+    <div class="container mt-6">
+        <div class="row">
+            <div class="col mt-4">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h2>Online Request</h2>
+                    <button type="button" class="btn btn-success" data-bs-toggle="modal"
+                        data-bs-target="#peminjaman">Pinjam</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mt-4">
+            <div class="col">
+                <table id="konfirmasi" class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th scope="col">NIM</th>
+                            <th scope="col">Buku</th>
+                            <th scope="col">Tanggal</th>
+                            <th scope="col">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for permintaan in permintaan_list %}
+                        <tr>
+                            <td>{{ permintaan.nim }}</td>
+                            <td>{{ permintaan.judul }}</td>
+                            <td>{{ permintaan.tanggal_pinjam }}</td>
+                            <td>
+                                <button type="button" class="btn btn-primary"
+                                    onclick="terimaPermintaan('{{ permintaan.nim }}', '{{ permintaan.judul }}', '{{ permintaan.tanggal_pinjam }}')">Terima</button>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="peminjaman" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <select id="mahasiswa" class="form-select mb-2" aria-label="Default select example">
+                        <option selected>Mahasiswa</option>
+                        {% for mahasiswa in mahasiswa_list %}
+                        <option value="{{ mahasiswa.nim }}">{{ mahasiswa.nim }}</option>
+                        {% endfor %}
+                    </select>
+
+                    <select id="buku" class="form-select mb-2" aria-label="Default select example">
+                        <option selected>Buku</option>
+                        {% for book in buku_list %}
+                        <option value="{{ book.judul }}">{{ book.judul }}</option>
+                        {% endfor %}
+                    </select>
+                    <div class="form-group"> <!-- Date input -->
+                        <label class="control-label" for="date"></label>
+                        <input class="form-control" id="date" name="date" placeholder="MM/DD/YYY" type="text" />
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" onclick="savePeminjaman()">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.4/css/bulma.min.css"
+    integrity="sha512-HqxHUkJM0SYcbvxUw5P60SzdOTy/QVwA1JJrvaXJv4q7lmbDZCmZaqz01UPOaQveoxfYRv1tHozWGPMcuTBuvQ=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" /> -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"
+        integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+"
+        crossorigin="anonymous"></script>
+
+    <script src="https://code.jquery.com/jquery-3.7.1.js"
+        integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
+    <title>Pengembalian</title>
+
+    <script>
+        function selesai(nim, buku, tanggal) {
+            $.ajax({
+                type: 'POST',
+                url: '/selesai_peminjaman',
+                data: {
+                    nim: nim,
+                    buku: buku,
+                    tanggal: tanggal
+                },
+                success: function (response) {
+                    if (response.result === 'success') {
+                        // Optionally, you can update the UI or show a success message
+                        alert('Peminjaman selesai!');
+                        // Reload the page or update the table if needed
+                        location.reload();
+                    } else {
+                        alert('Failed to complete peminjaman: ' + response.error);
+                    }
+                },
+                error: function (error) {
+                    console.error('Error:', error);
+                }
+            });
+        }
+    </script>
+
+</head>
+
+<body>
+    <section>
+        <div>
+            <div class="d-flex justify-content-between p-3 bg-primary">
+                <div>
+                    <h1 style="font-size: 40px;">EasyLib</h1>
+                </div>
+                <div>
+                    <a href="/user/{{ user_info.nik }}">
+                        <img id="profile-foto" style="height: 50px;width: 50px;border-radius: 50%;"
+                            src="{{ url_for('static', filename=user_info.profile_pic_real) }}">
+                    </a>
+
+                </div>
+            </div>
+        </div>
+        <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+            <div class="container-fluid">
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                        <li class="nav-item">
+                            <a class="nav-link active navbar-brand" aria-current="page" href="/">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active navbar-brand" aria-current="page" href="/dashboard">Dashboard</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link navbar-brand" href="/kelola">Kelola</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link navbar-brand" href="/peminjaman">Peminjaman</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link navbar-brand" href="/pengembalian">Pengembalian</a>
+                        </li>
+
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        </div>
+    </section>
+
+    <div class="container mt-6">
+        <div class="row">
+            <div class="col">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h2>Pengembalian</h2>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mt-4">
+            <div class="col">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th scope="col">NIM</th>
+                            <th scope="col">Buku</th>
+                            <th scope="col">Tanggal</th>
+                            <th scope="col">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for peminjaman in peminjaman_list %}
+                        <tr>
+                            <td>{{ peminjaman.nim }}</td>
+                            <td>{{ peminjaman.buku }}</td>
+                            <td>{{ peminjaman.tanggal }}</td>
+                            <td>
+                                <button
+                                    onclick="selesai('{{ peminjaman.nim }}', '{{ peminjaman.buku }}', '{{ peminjaman.tanggal }}')"
+                                    type="button" class="btn btn-primary">Done</button>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
